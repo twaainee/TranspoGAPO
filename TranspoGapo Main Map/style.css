@@ -1,0 +1,175 @@
+/* style.css - all custom styles for TranspoGAPO */
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* custom scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Leaflet map container fills parent */
+#map {
+  height: 100%;
+  width: 100%;
+  background: #d1d5db;
+}
+
+/* Make attribution smaller and subtle */
+.leaflet-control-attribution {
+  font-size: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  padding: 2px 6px;
+  margin: 4px;
+  backdrop-filter: blur(2px);
+}
+
+/* Ensure the map tiles don't block overlay clicks */
+.leaflet-pane,
+.leaflet-control {
+  z-index: 10;
+}
+
+/* custom jeepney marker - yellow */
+.jeep-marker-yellow {
+  background: #fbbf24;
+  border-radius: 8px 8px 8px 0;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  width: 36px !important;
+  height: 36px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(45deg);
+  transform-origin: bottom left;
+}
+.jeep-marker-yellow .material-symbols-outlined {
+  transform: rotate(-45deg);
+  color: #1e293b;
+  font-size: 22px;
+  font-variation-settings: 'FILL' 1;
+}
+.jeep-marker-yellow::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 14px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #fbbf24;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+/* custom jeepney marker - red */
+.jeep-marker-red {
+  background: #dc2626;
+  border-radius: 8px 8px 8px 0;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  width: 36px !important;
+  height: 36px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(45deg);
+  transform-origin: bottom left;
+}
+.jeep-marker-red .material-symbols-outlined {
+  transform: rotate(-45deg);
+  color: white;
+  font-size: 22px;
+  font-variation-settings: 'FILL' 1;
+}
+.jeep-marker-red::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 14px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #dc2626;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+/* custom jeepney marker - green (new) */
+.jeep-marker-green {
+  background: #16a34a; /* green-600 */
+  border-radius: 8px 8px 8px 0;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  width: 36px !important;
+  height: 36px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(45deg);
+  transform-origin: bottom left;
+}
+.jeep-marker-green .material-symbols-outlined {
+  transform: rotate(-45deg);
+  color: white;
+  font-size: 22px;
+  font-variation-settings: 'FILL' 1;
+}
+.jeep-marker-green::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 14px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #16a34a;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+/* route info floating window (hidden by default) */
+#route-info-window {
+  display: none;
+  transition: opacity 0.2s;
+}
+
+/* active route card */
+.route-card-active {
+  background-color: rgba(19, 127, 236, 0.08);
+  border-color: rgba(19, 127, 236, 0.3) !important;
+}
+
+/* routing panel positioned bottom-left to avoid floating window */
+.leaflet-routing-container {
+  position: absolute !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  top: auto !important;
+  right: auto !important;
+  max-width: 280px;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  z-index: 1001 !important;
+}
+.leaflet-routing-alternatives h2 {
+  font-size: 14px;
+  font-weight: bold;
+}

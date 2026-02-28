@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TranspoGAPO · Olongapo Jeepney Map</title>
+    <!-- Tailwind + fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Leaflet (OSM) + routing machine -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- tailwind config (kept inline) -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white"
+  >
+    <div class="relative flex h-screen w-full flex-col overflow-hidden">
+      <!-- header -->
+      <header
+        class="z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e5e7eb] dark:border-primary/20 bg-white dark:bg-background-dark px-6 md:px-10 py-3"
+      >
+        <div class="flex items-center gap-4 text-primary">
+          <div class="size-6">
+            <svg
+              fill="none"
+              viewbox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+          <h2
+            class="text-[#111418] dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]"
+          >
+            TranspoGAPO
+          </h2>
+        </div>
+        <div class="hidden md:flex flex-1 justify-center gap-8">
+          <nav class="flex items-center gap-9">
+            <a
+              class="text-[#111418] dark:text-white text-sm font-semibold hover:text-primary transition-colors"
+              href="#"
+              >Home</a
+            >
+            <a
+              class="text-primary text-sm font-bold border-b-2 border-primary py-1"
+              href="#"
+              >Map</a
+            >
+            <a
+              class="text-[#111418] dark:text-white text-sm font-semibold hover:text-primary transition-colors"
+              href="#"
+              >Routes</a
+            >
+            <a
+              class="text-[#111418] dark:text-white text-sm font-semibold hover:text-primary transition-colors"
+              href="#"
+              >Schedules</a
+            >
+            <a
+              class="text-[#111418] dark:text-white text-sm font-semibold hover:text-primary transition-colors"
+              href="#"
+              >About</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="flex items-center justify-center rounded-lg h-10 w-10 bg-background-light dark:bg-primary/20 text-primary"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button
+            class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold tracking-wide"
+          >
+            <span class="material-symbols-outlined text-base"
+              >account_circle</span
+            >
+            <span class="hidden sm:inline">Sign In</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- main: sidebar + map -->
+      <main class="relative flex flex-1 overflow-hidden">
+        <!-- sidebar -->
+        <aside
+          class="z-40 w-full max-w-[360px] bg-white dark:bg-background-dark border-r border-[#e5e7eb] dark:border-primary/10 flex flex-col shadow-xl"
+        >
+          <div class="p-6 border-b border-[#f0f2f4] dark:border-primary/10">
+            <h3 class="text-lg font-bold mb-4">Plan Your Route</h3>
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >search</span
+              >
+              <input
+                class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-primary/5 border-none rounded-xl focus:ring-2 focus:ring-primary text-sm transition-all"
+                placeholder="Where are you going?"
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            class="px-6 py-4 flex flex-wrap gap-2 border-b border-[#f0f2f4] dark:border-primary/10"
+          >
+            <button
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-white text-xs font-bold"
+            >
+              <span class="material-symbols-outlined text-sm"
+                >directions_bus</span
+              >
+              Jeepneys
+            </button>
+            <button
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background-light dark:bg-primary/10 text-[#111418] dark:text-white text-xs font-semibold hover:bg-gray-200"
+            >
+              <span class="material-symbols-outlined text-sm">location_on</span>
+              Stops
+            </button>
+            <button
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background-light dark:bg-primary/10 text-[#111418] dark:text-white text-xs font-semibold hover:bg-gray-200"
+            >
+              <span class="material-symbols-outlined text-sm">apartment</span>
+              Terminals
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4
+                class="text-sm font-bold text-gray-500 uppercase tracking-wider"
+              >
+                Active PUV Routes
+              </h4>
+              <span
+                class="text-xs text-primary font-bold cursor-pointer hover:underline"
+                >View All</span
+              >
+            </div>
+            <div class="space-y-3" id="route-cards-container">
+              <div
+                class="route-card group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-primary/20 hover:bg-primary/5 cursor-pointer transition-all"
+                data-route="blue"
+                data-name="Subic – Olongapo"
+                data-color="#3b82f6"
+                data-frequency="Every 10 mins"
+              >
+                <div class="w-1.5 h-10 bg-blue-600 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold">Subic – Olongapo</p>
+                  <p class="text-xs text-gray-500">
+                    Blue Jeepney • Every 10 mins
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-300 group-hover:text-primary"
+                  >chevron_right</span
+                >
+              </div>
+              <div
+                class="route-card group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-primary/20 hover:bg-primary/5 cursor-pointer transition-all"
+                data-route="yellow"
+                data-name="Sta. Rita – Downtown"
+                data-color="#fbbf24"
+                data-frequency="Every 15 mins"
+              >
+                <div class="w-1.5 h-10 bg-yellow-400 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold">Sta. Rita – Downtown</p>
+                  <p class="text-xs text-gray-500">
+                    Yellow Jeepney • Every 15 mins
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-300 group-hover:text-primary"
+                  >chevron_right</span
+                >
+              </div>
+              <div
+                class="route-card group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-primary/20 hover:bg-primary/5 cursor-pointer transition-all"
+                data-route="red"
+                data-name="Gordon Heights – Downtown"
+                data-color="#dc2626"
+                data-frequency="Every 8 mins"
+              >
+                <div class="w-1.5 h-10 bg-red-600 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold">Gordon Heights – Downtown</p>
+                  <p class="text-xs text-gray-500">
+                    Red Jeepney • Every 8 mins
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-300 group-hover:text-primary"
+                  >chevron_right</span
+                >
+              </div>
+              <div
+                class="route-card group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-primary/20 hover:bg-primary/5 cursor-pointer transition-all"
+                data-route="green"
+                data-name="Mabayuan – Public Market"
+                data-color="#16a34a"
+                data-frequency="Every 12 mins"
+              >
+                <div class="w-1.5 h-10 bg-green-600 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold">Mabayuan – Public Market</p>
+                  <p class="text-xs text-gray-500">
+                    Green Jeepney • Every 12 mins
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-300 group-hover:text-primary"
+                  >chevron_right</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="p-6 bg-background-light/50 dark:bg-primary/5 border-t border-[#f0f2f4] dark:border-primary/10"
+          >
+            <!-- Changed button: Show All Routes -->
+            <button
+              id="show-all-routes-btn"
+              class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+            >
+              <span class="material-symbols-outlined">map</span> Show All Routes
+            </button>
+          </div>
+        </aside>
+
+        <!-- map area -->
+        <div class="relative flex-1 bg-gray-200">
+          <div id="map" class="absolute inset-0 z-0"></div>
+
+          <!-- floating window -->
+          <div
+            id="route-info-window"
+            class="absolute top-10 right-10 z-[1000] max-w-xs bg-white dark:bg-background-dark p-4 rounded-2xl shadow-2xl border border-primary/10"
+          >
+            <div class="flex items-start justify-between mb-3">
+              <div id="route-icon" class="bg-primary/10 p-2 rounded-lg">
+                <span class="material-symbols-outlined text-primary"
+                  >directions_bus</span
+                >
+              </div>
+              <button
+                id="close-window-btn"
+                class="text-gray-400 hover:text-gray-600"
+              >
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <h5 id="route-name" class="text-sm font-bold">
+              Sta. Rita – Downtown
+            </h5>
+            <p id="route-desc" class="text-xs text-gray-500 mt-1">
+              Yellow Jeepney • Every 15 mins
+            </p>
+            <div
+              class="mt-4 pt-4 border-t border-gray-100 dark:border-primary/10 flex gap-2"
+            >
+              <button
+                id="window-route-start-btn"
+                class="flex-1 text-xs font-bold py-2 bg-primary text-white rounded-lg"
+              >
+                Route Start
+              </button>
+              <button
+                id="window-directions-btn"
+                class="flex-1 text-xs font-bold py-2 bg-background-light dark:bg-primary/10 text-primary rounded-lg"
+              >
+                Directions
+              </button>
+            </div>
+          </div>
+
+          <!-- controls -->
+          <div class="absolute bottom-10 right-10 z-[1000] flex flex-col gap-3">
+            <button
+              id="locate-btn"
+              class="flex size-12 items-center justify-center rounded-xl bg-white dark:bg-background-dark shadow-xl hover:bg-background-light text-primary transition-colors"
+            >
+              <span class="material-symbols-outlined">my_location</span>
+            </button>
+            <div
+              class="flex flex-col rounded-xl bg-white dark:bg-background-dark shadow-xl overflow-hidden border border-gray-100 dark:border-primary/10"
+            >
+              <button
+                id="zoom-in-btn"
+                class="flex size-12 items-center justify-center hover:bg-background-light text-[#111418] dark:text-white transition-colors"
+              >
+                <span class="material-symbols-outlined">add</span>
+              </button>
+              <div
+                class="h-[1px] bg-gray-100 dark:bg-primary/10 w-8 mx-auto"
+              ></div>
+              <button
+                id="zoom-out-btn"
+                class="flex size-12 items-center justify-center hover:bg-background-light text-[#111418] dark:text-white transition-colors"
+              >
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+            </div>
+            <button
+              id="layers-btn"
+              class="flex size-12 items-center justify-center rounded-xl bg-primary shadow-xl hover:opacity-90 text-white transition-colors"
+            >
+              <span class="material-symbols-outlined">layers</span>
+            </button>
+          </div>
+
+          <!-- legend -->
+          <div
+            class="absolute bottom-10 left-10 z-[1000] bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-gray-500 shadow-sm border border-white/20"
+          >
+            Olongapo City Guide • Click a route or Show All
+          </div>
+        </div>
+      </main>
+
+      <!-- mobile bar -->
+      <div
+        class="md:hidden z-50 bg-white dark:bg-background-dark border-t border-gray-100 dark:border-primary/10 p-4 flex justify-between items-center"
+      >
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase font-bold text-gray-400"
+            >Current Destination</span
+          >
+          <span class="text-sm font-bold">Magsaysay Drive</span>
+        </div>
+        <button
+          class="bg-primary text-white px-6 py-2 rounded-xl font-bold text-sm"
+        >
+          Get Routes
+        </button>
+      </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="script.js" defer></script>
+  </body>
+</html>
