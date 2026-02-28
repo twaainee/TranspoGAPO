@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TranspoGAPO - Olongapo City Transport Guide</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white transition-colors duration-200">
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-[#f0f2f4] dark:border-[#2a343f] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 md:px-20 py-4">
+      <div class="flex items-center gap-3">
+        <!-- Logo container: user-provided logo.png -->
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white">
+          <img src="/assets/logo.png" class="w-13 h-13" alt="TranspoGAPO logo" />
+        </div>
+        <h2 class="text-xl font-extrabold tracking-tight">TranspoGAPO</h2>
+      </div>
+      <nav class="hidden md:flex flex-1 justify-center gap-20">
+        <!-- Active home link: text-primary, others default with hover effect -->
+        <a class="text-sm font-semibold text-primary transition-colors" href="#">Home</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Routes</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">About</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <button class="hidden sm:flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+          Explore Map
+        </button>
+        <!-- Mobile menu button -->
+        <button id="mobileMenuBtn" class="md:hidden p-2 relative">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile dropdown menu (hidden by default) -->
+    <div id="mobileDropdown" class="hidden md:hidden bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 shadow-lg py-4 px-6 flex-col gap-4 text-base font-semibold">
+      <a class="block py-2 text-primary" href="#">Home</a>
+      <a class="block py-2 hover:text-primary transition-colors" href="#">Routes</a>
+      <a class="block py-2 hover:text-primary transition-colors" href="#">About</a>
+      <a class="block py-2 hover:text-primary transition-colors" href="#" id="mobileExploreLink">Explore Map</a>
+    </div>
+
+    <main class="flex-1">
+      <!-- Hero Section -->
+      <section class="relative px-6 py-12 md:px-20 md:py-20 lg:py-28">
+        <div class="mx-auto max-w-[1280px]">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="flex flex-col gap-8">
+              <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Official Transport Guide
+              </div>
+              <h1 class="text-5xl font-black leading-[1.1] tracking-tight md:text-6xl lg:text-7xl">
+                Navigate Olongapo City <span class="text-primary">with Ease</span>
+              </h1>
+              <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400 max-w-[540px]">
+                Access the official guide for PUV routes, jeepney stops, and terminals in Olongapo City. Real-time path information at your fingertips.
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <button class="flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-bold text-white shadow-xl shadow-primary/30 hover:scale-[1.02] transition-transform">
+                  <span class="material-symbols-outlined">map</span>
+                  Start Exploring
+                </button>
+              </div>
+            </div>
+            <!-- Visual Element / Map Teaser -->
+            <div class="relative group">
+              <div class="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/20 to-transparent blur-2xl opacity-50"></div>
+              <div class="relative overflow-hidden rounded-[2rem] border-8 border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-700 shadow-2xl">
+                <img alt="Olongapo City Map Interface Preview" class="w-full aspect-[4/3] object-cover" src="/assets/map1.png" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white">
+                      <span class="material-symbols-outlined">explore</span>
+                    </div>
+                    <div class="text-white">
+                      <p class="text-xs font-medium opacity-80 uppercase tracking-widest">Currently Viewing</p>
+                      <p class="text-lg font-bold">Gordon Avenue Route</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Grid (4 cards) -->
+      <section class="bg-white dark:bg-slate-900 px-6 py-20 md:px-20 transition-colors duration-200">
+        <div class="mx-auto max-w-[1280px]">
+          <div class="mb-16 text-center md:text-left">
+            <h2 class="mb-4 text-3xl font-black md:text-4xl">Key Platform Features</h2>
+            <p class="max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+              Designed to bridge the gap between commuters and efficient urban mobility through modern digital solutions.
+            </p>
+          </div>
+          <!-- Grid: 1 col on mobile, 2 on md, 4 on lg -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1: Route Tracing -->
+            <div class="flex flex-col gap-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark p-8 hover:border-primary/50 transition-colors group">
+              <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl">map</span>
+              </div>
+              <div>
+                <h3 class="mb-3 text-xl font-bold">Route Tracing</h3>
+                <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+                  Displays all the routes of PUV in Olongapo City
+                </p>
+              </div>
+            </div>
+            <!-- Feature 2: Route Sorting -->
+            <div class="flex flex-col gap-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark p-8 hover:border-primary/50 transition-colors group">
+              <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl">sort_by_alpha</span>
+              </div>
+              <div>
+                <h3 class="mb-3 text-xl font-bold">Route Sorting</h3>
+                <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+                  Sorts Routes based on the Color Code of PUVs in Olongapo City
+                </p>
+              </div>
+            </div>
+            <!-- Feature 3: Terminal Locator -->
+            <div class="flex flex-col gap-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark p-8 hover:border-primary/50 transition-colors group">
+              <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl">location_on</span>
+              </div>
+              <div>
+                <h3 class="mb-3 text-xl font-bold">Terminal Locator</h3>
+                <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+                  Displays all active PUV terminals present in Olongapo City
+                </p>
+              </div>
+            </div>
+            <!-- Feature 4: Nearest Terminal -->
+            <div class="flex flex-col gap-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark p-8 hover:border-primary/50 transition-colors group">
+              <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl">near_me</span>
+              </div>
+              <div>
+                <h3 class="mb-3 text-xl font-bold">Nearest Terminal</h3>
+                <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+                  Finds the nearest terminal within your location
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section / Stats (updated to "Our Vision") -->
+      <section class="px-6 py-20 md:px-20 lg:py-32">
+        <div class="mx-auto max-w-[1280px]">
+          <div class="flex flex-col lg:flex-row items-center gap-16">
+            <div class="relative w-full lg:w-1/2">
+              <div class="aspect-square overflow-hidden rounded-[2.5rem]">
+                <img alt="Modern Transportation" class="h-full w-full object-cover" src="/assets/jeep_pic.png" />
+              </div>
+              <div class="absolute -bottom-8 -right-8 rounded-3xl bg-white dark:bg-slate-800 p-8 shadow-2xl border border-slate-100 dark:border-slate-700 hidden sm:block">
+                <div class="grid grid-cols-2 gap-8">
+                  <div class="text-center">
+                    <p class="text-3xl font-black text-primary">20+</p>
+                    <p class="text-xs font-bold uppercase text-slate-400">Routes</p>
+                  </div>
+                  <div class="text-center">
+                    <p class="text-3xl font-black text-primary">500+</p>
+                    <p class="text-xs font-bold uppercase text-slate-400">Stops</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full lg:w-1/2 space-y-8">
+              <div>
+                <h4 class="mb-2 font-bold uppercase tracking-widest text-primary">Our Vision</h4>
+                <h2 class="text-4xl font-black leading-tight md:text-5xl">Modernizing Urban Mobility in Olongapo</h2>
+              </div>
+              <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                Create an interactive, map-based transportation system that helps commuters in Olongapo City identify appropriate public utility vehicles by providing clear and centralized information on routes, stops, and terminals.
+              </p>
+              <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                TranspoGAPO is dedicated to providing commuters and tourists with accurate, real-time information about Olongapo City's transportation network.
+              </p>
+              <div class="pt-4">
+                <button class="group flex items-center gap-3 text-lg font-bold text-primary">
+                  Learn more about our project
+                  <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter / CTA -->
+      <section class="bg-primary px-6 py-20 text-white md:px-20 text-center">
+        <div class="mx-auto max-w-4xl space-y-8">
+          <h2 class="text-3xl font-black md:text-5xl">Ready to start your journey?</h2>
+          <p class="text-lg opacity-90 md:text-xl">
+            Join thousands of commuters using TranspoGAPO daily to plan their travel across the city.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button class="w-full sm:w-auto rounded-xl bg-white px-10 py-4 text-lg font-bold text-primary hover:bg-slate-50 transition-colors">
+              Launch Web App
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-12 md:px-20 transition-colors">
+      <div class="mx-auto max-w-[1280px]">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div class="col-span-1 md:col-span-2 space-y-6">
+            <div class="flex items-center gap-3">
+              <!-- Footer logo -->
+              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+                <img src="/assets/logo.png" class="w-5 h-5" alt="TranspoGAPO logo" />
+              </div>
+              <h2 class="text-lg font-extrabold tracking-tight">TranspoGAPO</h2>
+            </div>
+            <p class="max-w-sm text-slate-500 dark:text-slate-400">
+              The official digital transportation initiative for Olongapo City. Helping you get where you need to be, faster and safer.
+            </p>
+            <div class="flex gap-4">
+              <a class="h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all" href="#">
+                <span class="material-symbols-outlined">public</span>
+              </a>
+              <a class="h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all" href="#">
+                <span class="material-symbols-outlined">alternate_email</span>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 class="mb-6 font-bold uppercase tracking-widest text-sm">Quick Links</h3>
+            <ul class="space-y-4 text-slate-500 dark:text-slate-400">
+              <li><a class="hover:text-primary" href="#">Home</a></li>
+              <li><a class="hover:text-primary" href="#">Routes</a></li>
+              <li><a class="hover:text-primary" href="#">About</a></li>
+              <li><a class="hover:text-primary" href="#">News &amp; Updates</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="mb-6 font-bold uppercase tracking-widest text-sm">Legal</h3>
+            <ul class="space-y-4 text-slate-500 dark:text-slate-400">
+              <li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+              <li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+              <li><a class="hover:text-primary" href="#">Data Protection</a></li>
+              <li><a class="hover:text-primary" href="#">Contact Support</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-12 border-t border-slate-100 dark:border-slate-800 pt-8 text-center text-sm text-slate-500">
+          <p>© 2024 TranspoGAPO. Dedicated to the people of Olongapo City.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Mobile dropdown toggle script -->
+  <script>
+    (function() {
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const dropdown = document.getElementById('mobileDropdown');
+
+      if (menuBtn && dropdown) {
+        // Toggle dropdown on button click
+        menuBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when any link inside it is clicked
+        dropdown.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', function() {
+            dropdown.classList.add('hidden');
+          });
+        });
+
+        // Optional: close if clicked outside (but keep it simple)
+        document.addEventListener('click', function(e) {
+          if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
